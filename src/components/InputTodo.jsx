@@ -1,11 +1,10 @@
-/* eslint react/prop-types: 0 */
 import { useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 
-const InputTodo = (props) => {
-  const [inputText, setInputText] = useState({
-    title: "",
-  });
+const InputTodo = ({ addTodoProps, addCategory, categories }) => {
+  const [inputText, setInputText] = useState({ title: "" });
+  const [category, setCategory] = useState("");
+  const [newCategory, setNewCategory] = useState("");
 
   const onChange = (e) => {
     setInputText({
@@ -17,30 +16,53 @@ const InputTodo = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputText.title.trim()) {
-      props.addTodoProps(inputText.title);
-      setInputText({
-        title: "",
-      });
+      addTodoProps(inputText.title, category || newCategory);
+      setInputText({ title: "" });
+      setCategory("");
+      setNewCategory("");
     } else {
-      alert("Please write item");
+      alert("Bitte geben Sie eine Aufgabe ein.");
+    }
+  };
+
+  const handleNewCategory = (e) => {
+    if (e.key === "Enter") {
+      addCategory(newCategory);
+      setCategory(newCategory);
+      setNewCategory("");
     }
   };
 
   return (
-    <form
-      data-set="todo-form"
-      onSubmit={handleSubmit}
-      className="form-container"
-    >
+    <form onSubmit={handleSubmit} className="form-container">
       <input
         type="text"
         className="input-text"
-        placeholder="Add todo..."
+        placeholder="Aufgabe hinzufügen..."
         value={inputText.title}
         name="title"
         onChange={onChange}
       />
-      <button data-set="add-todo-btn" className="input-submit">
+      <select
+        className="category-select"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+      >
+        <option value="">Kategorie wählen...</option>
+        {categories.map((cat, index) => (
+          <option key={index} value={cat}>
+            {cat}
+          </option>
+        ))}
+      </select>
+      <input
+        type="text"
+        placeholder="Neue Kategorie erstellen..."
+        value={newCategory}
+        onChange={(e) => setNewCategory(e.target.value)}
+        onKeyDown={handleNewCategory}
+      />
+      <button className="input-submit">
         <FaPlusCircle />
       </button>
     </form>
