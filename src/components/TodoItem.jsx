@@ -23,7 +23,7 @@ const TodoItem = (props) => {
     textDecoration: "line-through",
   };
 
-  const { completed, id, title } = props.todo;
+  const { completed, id, priority, title } = props.todo;
 
   const viewMode = {};
   const editMode = {};
@@ -69,6 +69,19 @@ const TodoItem = (props) => {
         }}
         onKeyDown={handleUpdatedDone}
       />
+      <div style={viewMode}>
+        <label htmlFor={`priority-${id}`}>Priority: </label>
+        <select
+          id={`priority-${id}`}
+          value={priority || "none"}
+          onChange={(e) => props.setPriority(id, e.target.value)}
+        >
+          <option value="none">None</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
     </li>
   );
 };

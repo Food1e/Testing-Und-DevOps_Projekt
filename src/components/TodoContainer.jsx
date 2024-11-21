@@ -38,6 +38,7 @@ const TodoContainer = () => {
       id: uuidv4(),
       title,
       completed: false,
+      priority: "none",
     };
     setTodos([...todos, newTodo]);
   };
@@ -47,6 +48,17 @@ const TodoContainer = () => {
       todos.map((todo) => {
         if (todo.id === id) {
           todo.title = updatedTitle;
+        }
+        return todo;
+      })
+    );
+  };
+
+  const setPriority = (id, newPriority) => {
+    setTodos(
+      todos.map((todo) => {
+        if (todo.id === id) {
+          todo.priority = newPriority;
         }
         return todo;
       })
@@ -69,6 +81,7 @@ const TodoContainer = () => {
         handleChangeProps={handleChange}
         deleteTodoProps={delTodo}
         setUpdate={setUpdate}
+        setPriority={setPriority}
       />
     </div>
   );
