@@ -37,13 +37,15 @@ const TodoContainer = () => {
   const addTodoItem = (title, category) => {
     if (!categories.includes(category) && category.trim() !== "") {
       setCategories([...categories, category]);
-    }
-    const newTodo = {
-      id: uuidv4(),
-      title,
-      completed: false,
-      category: category || "Allgemein",
     };
+    
+  const newTodo = {
+    id: uuidv4(),
+    title,
+    completed: false,
+    category: category || "Allgemein",
+    priority: "none"
+  };
     setTodos([...todos, newTodo]);
   };
 
@@ -75,6 +77,18 @@ const TodoContainer = () => {
     );
   };
 
+  const setPriority = (id, newPriority) => {
+    setTodos(
+      todos.map((todo) => {
+        if (todo.id === id) {
+          todo.priority = newPriority;
+        }
+        return todo;
+      })
+    );
+  };
+
+  // componentDidUpdate
   useEffect(() => {
     const temp = JSON.stringify(todos);
     localStorage.setItem("todos", temp);
@@ -113,6 +127,7 @@ const TodoContainer = () => {
         setUpdate={setUpdate}
         updateCategoryProps={updateTodoCategory}
         categories={categories}
+        setPriority={setPriority}
       />
     </div>
   );

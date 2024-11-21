@@ -25,7 +25,23 @@ const TodoItem = ({
     textDecoration: "line-through",
   };
 
-  const { completed, id, title, category } = todo;
+  const { completed, id, priority, category, title } = props.todo;
+
+  const viewMode = {};
+  const editMode = {};
+
+  if (editing) {
+    viewMode.display = "none";
+  } else {
+    editMode.display = "none";
+  }
+
+  useEffect(
+    () => () => {
+      console.log("Cleaning up...");
+    },
+    []
+  );
 
   return (
     <li className={styles.item}>
@@ -51,6 +67,29 @@ const TodoItem = ({
         <button onClick={() => deleteTodoProps(id)}>
           <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
         </button>
+      </div>
+      <input
+        type="text"
+        style={editMode}
+        className={styles.textInput}
+        value={title}
+        onChange={(e) => {
+          props.setUpdate(e.target.value, id);
+        }}
+        onKeyDown={handleUpdatedDone}
+      />
+      <div style={viewMode}>
+        <label htmlFor={`priority-${id}`}>Priority: </label>
+        <select
+          id={`priority-${id}`}
+          value={priority || "none"}
+          onChange={(e) => props.setPriority(id, e.target.value)}
+        >
+          <option value="none">None</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
       </div>
     </li>
   );

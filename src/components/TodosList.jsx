@@ -7,6 +7,7 @@ const TodosList = ({
   setUpdate,
   updateCategoryProps,
   categories,
+  setPriority
 }) => (
   <ul data-set="todo-list">
     {todos.map((todo) => (
@@ -18,6 +19,7 @@ const TodosList = ({
         setUpdate={setUpdate}
         updateCategoryProps={updateCategoryProps}
         categories={categories}
+        setPriority={setPriority}
       />
     ))}
   </ul>
