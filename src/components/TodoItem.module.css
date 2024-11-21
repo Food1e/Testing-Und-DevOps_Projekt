@@ -27,3 +27,11 @@
   padding: 10px;
   border: 1px solid #dfdfdf;
 }
+
+.category-badge {
+  background-color: #e0e0e0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  margin-left: 10px;
+}

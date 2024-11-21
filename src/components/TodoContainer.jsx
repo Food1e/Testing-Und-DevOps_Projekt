@@ -7,13 +7,14 @@ import styles from "./TodoContainer.module.css";
 
 const TodoContainer = () => {
   const getInitialTodos = () => {
-    // getting stored items
     const temp = localStorage.getItem("todos");
     const savedTodos = JSON.parse(temp);
     return savedTodos || [];
   };
 
   const [todos, setTodos] = useState(getInitialTodos());
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleChange = (id) => {
     setTodos((prevState) =>
@@ -33,19 +34,41 @@ const TodoContainer = () => {
     setTodos([...todos.filter((todo) => todo.id !== id)]);
   };
 
-  const addTodoItem = (title) => {
-    const newTodo = {
-      id: uuidv4(),
-      title,
-      completed: false,
-      priority: "none",
+  const addTodoItem = (title, category) => {
+    if (!categories.includes(category) && category.trim() !== "") {
+      setCategories([...categories, category]);
     };
+    
+  const newTodo = {
+    id: uuidv4(),
+    title,
+    completed: false,
+    category: category || "Allgemein",
+    priority: "none"
+  };
     setTodos([...todos, newTodo]);
   };
 
+  const addCategory = (newCategory) => {
+    if (newCategory.trim() && !categories.includes(newCategory)) {
+      setCategories([...categories, newCategory]);
+    }
+  };
+
+  const updateTodoCategory = (id, newCategory) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, category: newCategory } : todo
+      )
+    );
+    if (!categories.includes(newCategory) && newCategory.trim() !== "") {
+      addCategory(newCategory);
+    }
+  };
+
   const setUpdate = (updatedTitle, id) => {
-    setTodos(
-      todos.map((todo) => {
+    setTodos((prevState) =>
+      prevState.map((todo) => {
         if (todo.id === id) {
           todo.title = updatedTitle;
         }
@@ -67,7 +90,6 @@ const TodoContainer = () => {
 
   // componentDidUpdate
   useEffect(() => {
-    // storing todos items
     const temp = JSON.stringify(todos);
     localStorage.setItem("todos", temp);
   }, [todos]);
@@ -75,12 +97,36 @@ const TodoContainer = () => {
   return (
     <div className={styles.inner}>
       <Header />
-      <InputTodo addTodoProps={addTodoItem} />
+      <InputTodo
+        addTodoProps={addTodoItem}
+        addCategory={addCategory}
+        categories={categories}
+      />
+      <div className={styles.filterContainer}>
+        <label htmlFor="category-filter">Kategorien filtern:</label>
+        <select
+          id="category-filter"
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">Alle</option>
+          {categories.map((cat, index) => (
+            <option key={index} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
       <TodosList
-        todos={todos}
+        todos={
+          selectedCategory
+            ? todos.filter((todo) => todo.category === selectedCategory)
+            : todos
+        }
         handleChangeProps={handleChange}
         deleteTodoProps={delTodo}
         setUpdate={setUpdate}
+        updateCategoryProps={updateTodoCategory}
+        categories={categories}
         setPriority={setPriority}
       />
     </div>

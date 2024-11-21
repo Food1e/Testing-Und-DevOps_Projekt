@@ -1,18 +1,28 @@
-/* eslint react/prop-types: 0 */
 import TodoItem from "./TodoItem";
 
-const TodosList = (props) => (
+const TodosList = ({
+  todos,
+  handleChangeProps,
+  deleteTodoProps,
+  setUpdate,
+  updateCategoryProps,
+  categories,
+  setPriority
+}) => (
   <ul data-set="todo-list">
-    {props.todos.map((todo) => (
+    {todos.map((todo) => (
       <TodoItem
         key={todo.id}
         todo={todo}
-        handleChangeProps={props.handleChangeProps}
-        deleteTodoProps={props.deleteTodoProps}
-        setUpdate={props.setUpdate}
-        setPriority={props.setPriority}
+        handleChangeProps={handleChangeProps}
+        deleteTodoProps={deleteTodoProps}
+        setUpdate={setUpdate}
+        updateCategoryProps={updateCategoryProps}
+        categories={categories}
+        setPriority={setPriority}
       />
     ))}
   </ul>
 );
+
 export default TodosList;
